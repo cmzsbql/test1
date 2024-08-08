@@ -37,7 +37,7 @@ deepspeed train_mlm.py --exp-name ARTM_test  --if-test --resume-trans ./output/o
 
 ## eval
 
-##### Replace the root_dir in eval.py  with the location where the model is saved, then run eval.py.
+##### Replace the root_dir in eval.py with the location where the generated result is saved, then run eval.py.
 
 ~~~
 python eval.py
