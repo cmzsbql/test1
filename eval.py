@@ -8,7 +8,7 @@ from metrics.predictive_metrics import predictive_score_metrics2
 from metrics.metric_utils import visualization
 
 ##Replace the address with the location where the model is saved
-root_dir = "./output/output_energy/ARTM/"
+root_dir = "./output/output_energy/ARTM_test/"
 
 labels = np.load(root_dir+"labels_ds.npy")
 pres = np.load(root_dir+"pres_ds.npy")
