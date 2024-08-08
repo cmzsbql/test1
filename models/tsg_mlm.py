@@ -34,8 +34,8 @@ class TSG_Transformer(nn.Module):
         B, L = input_idx.shape
         T = L
         for t in range(T):
-            # 前向传播，预测词汇
-            logits = self.forward(input_idx)  # 假设 forward 方法返回 logits (B, L, vocab_size)
+            
+            logits = self.forward(input_idx)
             probs = torch.softmax(logits, dim=-1)
 
 
@@ -69,8 +69,8 @@ class TSG_Transformer(nn.Module):
         T = L-torch.sum(non_mask[0])
         special_mask = (input_idx != self.num_vq)^non_mask
         for t in range(T):
-            # 前向传播，预测词汇
-            logits = self.forward(input_idx)  # 假设 forward 方法返回 logits (B, L, vocab_size)
+            
+            logits = self.forward(input_idx)  
             probs = torch.softmax(logits, dim=-1)
 
 
@@ -99,84 +99,7 @@ class TSG_Transformer(nn.Module):
             input_idx = torch.where(non_mask, input_idx,idx)
             non_mask = ~mask
         return input_idx#[:,-T:]
-    # def sample_cond(self, input_idx, if_categorial=False,non_mask=None):
-    #     B, L = input_idx.shape
-    #
-    #     logits = self.forward(input_idx)
-    #     probs = torch.softmax(logits, dim=-1)
-    #     sampled_probs, idx = torch.topk(probs, k=1, dim=-1)
-    #     sampled_probs = sampled_probs.squeeze(-1)
-    #     pre_probs = torch.gather(probs, -1, input_idx.unsqueeze(-1)).squeeze(-1)
-    #     delta_probs = sampled_probs - pre_probs
-    #     topk, _ = torch.topk(delta_probs, 11, dim=-1, largest=False)
-    #     thresholds = topk[:, -1]
-    #     non_mask = delta_probs < thresholds.unsqueeze(-1)
-    #
-    #     T = L-torch.sum(non_mask,1).min()
-    #     special_mask = (input_idx != self.num_vq)^non_mask
-    #     for t in range(T):
-    #         # 前向传播，预测词汇
-    #         logits = self.forward(input_idx)  # 假设 forward 方法返回 logits (B, L, vocab_size)
-    #         probs = torch.softmax(logits, dim=-1)
-    #
-    #         if if_categorial:
-    #             dist = Categorical(probs)
-    #             idx = dist.sample()
-    #             sampled_probs = torch.gather(probs, -1, idx.unsqueeze(-1)).squeeze(-1)
-    #
-    #         else:
-    #             sampled_probs, idx = torch.topk(probs, k=1, dim=-1)
-    #             sampled_probs = sampled_probs.squeeze(-1)
-    #             idx = idx.squeeze(-1)
-    #
-    #         # non_mask = input_idx != self.num_vq
-    #         sampled_probs = torch.where(non_mask, torch.ones_like(sampled_probs), sampled_probs)
-    #         # new_mask_num = torch.ceil(torch.cos(torch.tensor((t+1)/T*torch.pi / 2))*L).int()
-    #         new_mask_num = T - 1 - t
-    #         if new_mask_num == L:
-    #             new_mask_num = L-1
-    #
-    #         topk, _ = torch.topk(sampled_probs, new_mask_num+1, dim=-1, largest=False)
-    #         thresholds = topk[:, -1]
-    #         mask = sampled_probs < thresholds.unsqueeze(-1)
-    #         idx = torch.where(mask,torch.full_like(idx, self.num_vq), idx)
-    #         idx = torch.where(mask&special_mask,input_idx, idx)
-    #         input_idx = torch.where(non_mask, input_idx,idx)
-    #         non_mask = ~mask
-    #     return input_idx#[:,-T:]
-    #     # T = 1#L-non_mask.sum(1).min()
-    #     # special_mask = (input_idx != self.num_vq)^non_mask
-    #     # for t in range(T):
-    #     #     # 前向传播，预测词汇
-    #     #     logits = self.forward(input_idx)  # 假设 forward 方法返回 logits (B, L, vocab_size)
-    #     #     probs = torch.softmax(logits, dim=-1)
-    #     #
-    #     #     if if_categorial:
-    #     #         dist = Categorical(probs)
-    #     #         idx = dist.sample()
-    #     #         sampled_probs = torch.gather(probs, -1, idx.unsqueeze(-1)).squeeze(-1)
-    #     #
-    #     #     else:
-    #     #         sampled_probs, idx = torch.topk(probs, k=1, dim=-1)
-    #     #         sampled_probs = sampled_probs.squeeze(-1)
-    #     #         idx = idx.squeeze(-1)
-    #     #     pre_probs = torch.gather(probs, -1, input_idx.unsqueeze(-1)).squeeze(-1)
-    #     #     sampled_probs = sampled_probs - pre_probs
-    #     #     # non_mask = input_idx != self.num_vq
-    #     #     sampled_probs = torch.where(non_mask, torch.ones_like(sampled_probs), sampled_probs)
-    #     #     # new_mask_num = torch.ceil(torch.cos(torch.tensor((t+1)/T*torch.pi / 2))*L).int()
-    #     #     new_mask_num = T - 1 - t
-    #     #     if new_mask_num == L:
-    #     #         new_mask_num = L-1
-    #     #
-    #     #     topk, _ = torch.topk(sampled_probs, new_mask_num+1, dim=-1, largest=False)
-    #     #     thresholds = topk[:, -1]
-    #     #     mask = sampled_probs < thresholds.unsqueeze(-1)
-    #     #     idx = torch.where(mask,torch.full_like(idx, self.num_vq), idx)
-    #     #     idx = torch.where(mask&special_mask,input_idx, idx)
-    #     #     input_idx = torch.where(non_mask, input_idx,idx)
-    #     #     non_mask = ~mask
-    #     # return input_idx#[:,-T:]
+
 
 class SelfAttention(nn.Module):
 
